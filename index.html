@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodUp — Vos clients reviennent. Toujours.</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g:#7ed957; --g-dk:#4db32a; --g-glow:rgba(126,217,87,0.15);
+  --g-line:rgba(126,217,87,0.12);
+  --black:#000; --d1:#080808; --d2:#0f0f0f; --d3:#161616; --d4:#1e1e1e; --d5:#272727;
+  --white:#fff; --dim:rgba(255,255,255,0.52); --faint:rgba(255,255,255,0.08);
+  --line:rgba(255,255,255,0.06);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Libre Baskerville',Georgia,serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:#000;}::-webkit-scrollbar-thumb{background:var(--g);}
+.anton{font-family:'Anton',sans-serif;font-weight:400;letter-spacing:.5px;}
+.open{font-family:'Open Sans Condensed',sans-serif;}
+.g{color:var(--g);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:68px;background:rgba(0,0,0,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--g-line);}
+.logo{font-family:'Anton',sans-serif;font-size:24px;color:var(--white);text-decoration:none;}
+.logo span{color:var(--g);}
+.nav-links{display:flex;align-items:center;gap:40px;list-style:none;}
+.nav-links a{font-family:'Open Sans Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--g);}
+.nav-cta{font-family:'Open Sans Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--g);color:#000;padding:11px 26px;border:none;border-radius:2px;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap;}
+.nav-cta:hover{background:#9aee6e;transform:translateY(-1px);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:120px 64px 100px;overflow:hidden;text-align:center;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(126,217,87,0.09) 1px,transparent 1px),linear-gradient(90deg,rgba(126,217,87,0.09) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);pointer-events:none;}
+.hero-glow{position:absolute;top:15%;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(126,217,87,0.1) 0%,transparent 65%);pointer-events:none;}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;animation:float 9s ease-in-out infinite;}
+.orb1{width:280px;height:280px;background:rgba(126,217,87,0.06);top:8%;left:3%;animation-delay:0s;}
+.orb2{width:180px;height:180px;background:rgba(126,217,87,0.05);bottom:15%;right:6%;animation-delay:3.5s;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);}}
+
+.hero-badge{font-family:'Open Sans Condensed',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--g);border:1px solid rgba(126,217,87,0.28);background:rgba(126,217,87,0.06);padding:7px 18px;border-radius:20px;display:inline-flex;align-items:center;gap:9px;margin-bottom:32px;animation:fadeUp .7s ease both;}
+.bp{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.4);}}
+
+.hero-title{font-family:'Anton',sans-serif;font-size:clamp(54px,9vw,118px);line-height:.93;letter-spacing:-1.5px;color:var(--white);margin-bottom:30px;animation:fadeUp .7s .1s ease both;}
+.hero-title .lg{color:var(--g);display:block;}
+.hero-title .lw{display:block;}
+
+.hero-sub{font-size:clamp(15px,1.8vw,19px);color:var(--dim);line-height:1.85;max-width:520px;margin:0 auto 50px;animation:fadeUp .7s .2s ease both;}
+.hero-sub strong{color:var(--white);}
+
+.hero-actions{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s .3s ease both;}
+.btn-p{font-family:'Anton',sans-serif;font-size:15px;letter-spacing:1.5px;background:var(--g);color:#000;padding:16px 42px;border:none;border-radius:2px;cursor:pointer;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:10px;}
+.btn-p:hover{background:#9aee6e;transform:translateY(-2px);box-shadow:0 14px 40px rgba(126,217,87,0.22);}
+.btn-s{font-family:'Open Sans Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--dim);border:1px solid rgba(255,255,255,0.14);padding:15px 32px;border-radius:2px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.btn-s:hover{border-color:var(--g);color:var(--g);}
+
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;animation:fadeUp 1s .6s ease both;}
+.hs-txt{font-family:'Open Sans Condensed',sans-serif;font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.18);}
+.hs-line{width:1px;height:38px;background:linear-gradient(to bottom,rgba(126,217,87,.4),transparent);animation:scroll-anim 2s ease-in-out infinite;}
+@keyframes scroll-anim{0%,100%{transform:scaleY(1) translateY(0);opacity:.7;}50%{transform:scaleY(.4) translateY(8px);opacity:.2;}}
+
+/* STATS */
+.stats{background:var(--d1);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:44px 64px;display:grid;grid-template-columns:repeat(4,1fr);}
+.stat{text-align:center;padding:16px;position:relative;}
+.stat::after{content:'';position:absolute;right:0;top:15%;bottom:15%;width:1px;background:var(--line);}
+.stat:last-child::after{display:none;}
+.stat-n{font-family:'Anton',sans-serif;font-size:52px;color:var(--g);line-height:1;margin-bottom:6px;}
+.stat-l{font-family:'Open Sans Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);}
+
+/* SECTION */
+section{padding:100px 64px;}
+.sec-badge{font-family:'Open Sans Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--g);display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sec-badge::before{content:'';display:block;width:20px;height:2px;background:var(--g);border-radius:1px;}
+.sec-title{font-family:'Anton',sans-serif;font-size:clamp(34px,5vw,66px);line-height:1;letter-spacing:-.5px;margin-bottom:18px;}
+.sec-desc{font-size:16px;color:var(--dim);line-height:1.8;max-width:560px;}
+
+/* PROBLEM */
+.problem{background:var(--d2);position:relative;overflow:hidden;}
+.problem::before{content:'';position:absolute;top:-80px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(126,217,87,0.04) 0%,transparent 70%);pointer-events:none;}
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.prob-cards{display:flex;flex-direction:column;gap:10px;}
+.prob-card{background:var(--d3);border:1px solid var(--line);border-left:3px solid;padding:18px 22px;border-radius:2px;transition:transform .2s;}
+.prob-card:hover{transform:translateX(4px);}
+.prob-card.bad{border-left-color:rgba(220,50,50,.45);}
+.prob-card.good{border-left-color:var(--g);}
+.pc-lbl{font-family:'Open Sans Condensed',sans-serif;font-size:8.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:7px;}
+.bad .pc-lbl{color:rgba(220,80,80,.7);}
+.good .pc-lbl{color:var(--g);}
+.pc-txt{font-size:13.5px;color:rgba(255,255,255,.72);line-height:1.6;}
+
+/* HOW */
+.how{background:var(--black);}
+.how-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:64px;position:relative;}
+.how-steps::before{content:'';position:absolute;top:27px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(126,217,87,.2) 20%,rgba(126,217,87,.2) 80%,transparent);}
+.step{padding:0 22px;text-align:center;}
+.step-n-wrap{display:flex;align-items:center;justify-content:center;margin-bottom:22px;}
+.step-n{width:54px;height:54px;border-radius:50%;background:var(--d3);border:1px solid var(--g-line);display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-size:18px;color:var(--g);position:relative;z-index:2;}
+.step-ico{font-size:22px;margin-bottom:10px;display:block;}
+.step-t{font-family:'Anton',sans-serif;font-size:17px;letter-spacing:.3px;color:var(--white);margin-bottom:9px;}
+.step-d{font-family:'Open Sans Condensed',sans-serif;font-size:13px;font-weight:300;color:var(--dim);line-height:1.7;}
+
+/* OFFERS */
+.offers{background:var(--d1);position:relative;overflow:hidden;}
+.offers::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:800px;height:250px;background:radial-gradient(ellipse,rgba(126,217,87,0.05) 0%,transparent 70%);pointer-events:none;}
+.offers-hd{text-align:center;margin-bottom:60px;}
+.offers-hd .sec-badge{justify-content:center;}
+.offers-hd .sec-badge::before{display:none;}
+.offers-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;max-width:1080px;margin:0 auto;}
+.oc{background:var(--d3);padding:46px 42px;position:relative;overflow:hidden;}
+.oc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.oc.gold::before{background:linear-gradient(90deg,#c9a84c,#e8c97a);}
+.oc.teal::before{background:linear-gradient(90deg,var(--g-dk),var(--g));}
+.oc-wm{position:absolute;right:-8px;bottom:-20px;font-family:'Anton',sans-serif;font-size:155px;opacity:.025;color:#fff;line-height:1;user-select:none;pointer-events:none;}
+.oc-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:2px;font-family:'Open Sans Condensed',sans-serif;font-size:7.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:20px;width:fit-content;}
+.oc-badge.gold{background:rgba(201,168,76,.08);color:#c9a84c;border:1px solid rgba(201,168,76,.22);}
+.oc-badge.teal{background:rgba(126,217,87,.08);color:var(--g);border:1px solid rgba(126,217,87,.22);}
+.ob-dot{width:5px;height:5px;border-radius:50%;}
+.oc-badge.gold .ob-dot{background:#c9a84c;box-shadow:0 0 6px rgba(201,168,76,.6);}
+.oc-badge.teal .ob-dot{background:var(--g);box-shadow:0 0 6px rgba(126,217,87,.6);}
+.oc-ico{font-size:30px;display:block;margin-bottom:11px;}
+.oc-title{font-family:'Anton',sans-serif;font-size:24px;line-height:1.15;color:#fff;margin-bottom:6px;}
+.oc-desc{font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:26px;}
+.oc-lbl{font-family:'Open Sans Condensed',sans-serif;font-size:7.5px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:9px;display:flex;align-items:center;gap:8px;}
+.oc-lbl::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.05);}
+.oc-svcs{list-style:none;margin-bottom:26px;}
+.oc-svcs li{display:flex;align-items:flex-start;gap:10px;padding:8.5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12.5px;color:rgba(232,227,218,.8);line-height:1.5;}
+.oc-svcs li:last-child{border-bottom:none;}
+.sd{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:7px;margin-top:1px;}
+.sd.gold{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.18);}
+.sd.teal{background:rgba(126,217,87,.1);color:var(--g);border:1px solid rgba(126,217,87,.18);}
+.tiers{display:flex;flex-direction:column;gap:7px;}
+.tier{background:var(--d4);border-radius:4px;border-left:2.5px solid;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.t1{border-color:rgba(201,168,76,.18);}
+.t2{border-color:rgba(201,168,76,.52);}
+.t3{border-color:#c9a84c;background:linear-gradient(90deg,#1c1a10,#1e1e1e);}
+.t-lbl{font-size:11px;color:rgba(255,255,255,.38);flex:1;}
+.t-price{text-align:right;flex-shrink:0;}
+.t-price .v{font-family:'Anton',sans-serif;font-size:20px;color:#c9a84c;display:block;line-height:1;}
+.t-price .u{font-size:8px;color:rgba(255,255,255,.2);display:block;margin-top:2px;}
+.pbox{background:var(--d4);border-radius:4px;border-left:2.5px solid var(--g);overflow:hidden;}
+.pr{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;gap:10px;}
+.pr+.pr{border-top:1px solid rgba(255,255,255,.05);}
+.pr-lbl{font-size:11px;color:rgba(255,255,255,.38);}
+.pr-val{text-align:right;}
+.pr-val .big{font-family:'Anton',sans-serif;font-size:28px;color:var(--g);display:block;line-height:1;}
+.pr-val .mid{font-family:'Anton',sans-serif;font-size:20px;color:var(--g);display:block;line-height:1;}
+.pr-val .u{font-size:8px;color:rgba(255,255,255,.2);display:block;margin-top:2px;}
+
+/* FEATURES */
+.features{background:var(--d2);}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:60px;}
+.fc{background:var(--d3);padding:34px 30px;border-top:2px solid rgba(126,217,87,.08);transition:border-top-color .3s,transform .2s;}
+.fc:hover{border-top-color:var(--g);transform:translateY(-4px);}
+.fc-ico{font-size:26px;margin-bottom:14px;display:block;}
+.fc-t{font-family:'Anton',sans-serif;font-size:17px;letter-spacing:.3px;color:var(--white);margin-bottom:9px;}
+.fc-d{font-size:13px;color:var(--dim);line-height:1.72;}
+
+/* TESTIMONIALS */
+.testi{background:var(--black);text-align:center;}
+.testi .sec-badge{justify-content:center;}
+.testi .sec-badge::before{display:none;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:60px;text-align:left;}
+.tc{background:var(--d3);padding:34px 30px;border-bottom:2px solid transparent;transition:border-bottom-color .3s;}
+.tc:hover{border-bottom-color:var(--g);}
+.tc-q{font-family:'Anton',sans-serif;font-size:48px;color:var(--g);opacity:.28;line-height:1;margin-bottom:10px;}
+.tc-txt{font-size:14px;color:rgba(255,255,255,.72);line-height:1.8;font-style:italic;margin-bottom:22px;}
+.tc-auth{display:flex;align-items:center;gap:11px;}
+.tc-av{width:38px;height:38px;border-radius:50%;background:var(--d5);border:2px solid rgba(126,217,87,.15);display:flex;align-items:center;justify-content:center;font-size:15px;}
+.tc-name{font-family:'Open Sans Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.8px;color:var(--white);}
+.tc-role{font-family:'Open Sans Condensed',sans-serif;font-size:9.5px;color:var(--g);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;}
+
+/* FAQ */
+.faq{background:var(--d1);}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:60px;}
+.faq-item{border-bottom:1px solid var(--line);padding:22px 0;}
+.faq-item:first-child{border-top:1px solid var(--line);}
+.faq-q{font-family:'Anton',sans-serif;font-size:16.5px;letter-spacing:.3px;color:var(--white);display:flex;align-items:flex-start;justify-content:space-between;cursor:pointer;gap:14px;transition:color .2s;}
+.faq-q:hover{color:var(--g);}
+.faq-arr{color:var(--g);font-size:12px;transition:transform .2s;flex-shrink:0;margin-top:3px;}
+.faq-a{font-size:13px;color:var(--dim);line-height:1.8;margin-top:0;max-height:0;overflow:hidden;transition:max-height .35s ease,margin-top .2s;}
+.faq-item.open .faq-a{max-height:180px;margin-top:12px;}
+.faq-item.open .faq-arr{transform:rotate(180deg);}
+
+/* CONTACT */
+.contact{background:var(--black);position:relative;overflow:hidden;}
+.contact::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:900px;background:radial-gradient(circle,rgba(126,217,87,0.07) 0%,transparent 65%);pointer-events:none;}
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;position:relative;z-index:2;}
+.c-promise{margin-top:36px;display:flex;flex-direction:column;gap:13px;}
+.cp-item{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--dim);}
+.cp-check{width:22px;height:22px;border-radius:50%;background:rgba(126,217,87,.09);border:1px solid rgba(126,217,87,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--g);font-size:10px;}
+.c-form{background:var(--d3);border:1px solid var(--line);border-top:3px solid var(--g);padding:38px 34px;border-radius:2px;}
+.cf-title{font-family:'Anton',sans-serif;font-size:20px;letter-spacing:.5px;margin-bottom:4px;}
+.cf-sub{font-family:'Open Sans Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;color:var(--dim);margin-bottom:26px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px;}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:11px;}
+.fl{font-family:'Open Sans Condensed',sans-serif;font-size:8.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.3);}
+.fi,.fs,.fta{background:var(--d4);border:1px solid var(--line);color:var(--white);border-radius:2px;padding:11px 13px;font-family:'Libre Baskerville',serif;font-size:13px;transition:border-color .2s;outline:none;width:100%;}
+.fi:focus,.fs:focus,.fta:focus{border-color:rgba(126,217,87,.38);}
+.fi::placeholder,.fta::placeholder{color:rgba(255,255,255,.18);}
+.fs{appearance:none;cursor:pointer;}
+.fta{resize:none;height:88px;}
+.fsub{width:100%;margin-top:8px;font-family:'Anton',sans-serif;font-size:16px;letter-spacing:1.5px;background:var(--g);color:#000;padding:15px;border:none;border-radius:2px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
+.fsub:hover{background:#9aee6e;transform:translateY(-2px);box-shadow:0 10px 30px rgba(126,217,87,.2);}
+
+/* STEP TOOLTIP */
+.step { position: relative; }
+.step-tooltip {
+  position: absolute;
+  bottom: calc(100% + 16px);
+  left: 50%; transform: translateX(-50%);
+  width: 240px;
+  background: var(--d4);
+  border: 1px solid rgba(126,217,87,0.25);
+  border-top: 2px solid var(--g);
+  padding: 14px 16px;
+  border-radius: 4px;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-size: 12px; font-weight: 300;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.65;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  transform: translateX(-50%) translateY(6px);
+  z-index: 10;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  text-align: left;
+}
+.step-tooltip strong {
+  color: var(--g);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+.step-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(126,217,87,0.25);
+}
+.step:hover .step-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* STEP HIGHLIGHT & BADGE */
+.step-highlight { position: relative; }
+.step-highlight .step-n-wrap::after {
+  content: '';
+  position: absolute;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: rgba(126,217,87,0.06);
+  animation: ping 2.5s ease-out infinite;
+}
+@keyframes ping {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2); opacity: 0; }
+}
+.step-badge {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 8.5px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--g);
+  border: 1px solid rgba(126,217,87,0.3);
+  background: rgba(126,217,87,0.07);
+  padding: 4px 10px; border-radius: 20px;
+}
+
+/* PROBLEM SWITCHER */
+.psw-btn {
+  font-family:'Open Sans Condensed',sans-serif;
+  font-size:12px; font-weight:700;
+  letter-spacing:1.5px; text-transform:uppercase;
+  background:var(--d3); color:var(--dim);
+  border:1px solid var(--line);
+  padding:12px 28px; cursor:pointer;
+  transition:all .2s;
+}
+.psw-btn:first-child { border-radius:2px 0 0 2px; border-right:none; }
+.psw-btn:last-child  { border-radius:0 2px 2px 0; }
+.psw-btn.active {
+  background:rgba(126,217,87,0.1);
+  color:var(--g);
+  border-color:rgba(126,217,87,0.35);
+}
+.psw-btn:hover:not(.active) { color:var(--white); border-color:rgba(255,255,255,0.18); }
+.prob-grid { transition: opacity .25s ease; }
+
+/* FOOTER */
+footer{background:var(--d1);border-top:1px solid var(--line);padding:16px 64px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;max-width:900px;margin:0 auto;width:100%;}
+.f-logo{font-family:'Anton',sans-serif;font-size:20px;color:var(--white);}
+.f-logo span{color:var(--g);}
+.f-links{display:flex;gap:30px;list-style:none;}
+.f-links a{font-family:'Open Sans Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .2s;}
+.f-links a:hover{color:var(--g);}
+.f-copy{font-family:'Open Sans Condensed',sans-serif;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.15);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+@media (max-width: 768px) {
+  nav { padding: 0 18px; height: 60px; }
+  .nav-links { display: none; }
+  .nav-cta { font-size: 10px; padding: 9px 16px; }
+  .hero { padding: 90px 20px 60px; min-height: 100svh; }
+  .hero-title { font-size: clamp(44px, 13vw, 70px); letter-spacing: -1px; }
+  .hero-sub { font-size: 15px; }
+  .hero-actions { flex-direction: column; align-items: stretch; text-align: center; gap: 12px; }
+  .btn-p, .btn-s { padding: 15px 20px; justify-content: center; }
+  .stats { grid-template-columns: repeat(2,1fr); padding: 24px 16px; gap: 0; }
+  .stat::after { display: none; }
+  .stat { border-bottom: 1px solid var(--line); padding: 16px 8px; }
+  .stat:nth-child(odd) { border-right: 1px solid var(--line); }
+  .stat-n { font-size: 38px; }
+  section { padding: 56px 20px; }
+  .sec-title { font-size: clamp(28px, 8vw, 44px); }
+  .prob-grid { grid-template-columns: 1fr; gap: 40px; }
+  .psw-btn { font-size: 11px; padding: 11px 16px; }
+  .how-steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .how-steps::before { display: none; }
+  .offers-grid { grid-template-columns: 1fr; gap: 2px; }
+  .oc { padding: 32px 24px; }
+  .feat-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+  .fc { padding: 24px 18px; }
+  .testi-grid { grid-template-columns: 1fr; gap: 2px; }
+  .faq-grid { grid-template-columns: 1fr; gap: 0; }
+  .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+  .c-form { padding: 28px 20px; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  footer { flex-direction: column; text-align: center; padding: 28px 20px; gap: 16px; }
+  .f-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+}
+@media (max-width: 480px) {
+  .how-steps { grid-template-columns: 1fr; }
+  .feat-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Food<span>Up</span></a>
+  <ul class="nav-links">
+    <li><a href="#offres">Nos offres</a></li>
+    <li><a href="#comment">Comment ça marche</a></li>
+    <li><a href="#temoignages">Témoignages</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Être contacté →</a>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="hero-badge"><span class="bp"></span>Solutions pour restaurateurs indépendants</div>
+  <h1 class="hero-title anton">
+    <span class="lw">Vos clients</span>
+    <span class="lg">reviennent.</span>
+    <span class="lw">Toujours.</span>
+  </h1>
+  <p class="hero-sub">
+    FoodUp transforme vos clients occasionnels en <strong>clients fidèles</strong> — et réduit vos <strong>commissions de plateformes</strong> sans changer votre cuisine.
+  </p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-p">Obtenir mon diagnostic gratuit →</a>
+    <a href="#offres" class="btn-s">Découvrir nos offres ↓</a>
+  </div>
+  <div class="hero-scroll">
+    <span class="hs-txt">Découvrir</span>
+    <div class="hs-line"></div>
+  </div>
+</section>
+
+<div class="stats" id="stats-bar">
+  <div class="stat"><div class="stat-n anton"><span class="count-anim" data-prefix="+" data-suffix="%" data-target="40">0</span></div><div class="stat-l open">De CA en moyenne</div></div>
+  <div class="stat"><div class="stat-n anton"><span class="count-anim" data-prefix="−" data-suffix="%" data-target="30">0</span></div><div class="stat-l open">De commissions plateforme</div></div>
+  <div class="stat"><div class="stat-n anton"><span class="count-anim" data-prefix="×" data-suffix="" data-target="3">0</span></div><div class="stat-l open">De clients qui reviennent</div></div>
+  <div class="stat"><div class="stat-n anton"><span class="count-anim" data-prefix="" data-suffix="j" data-target="14">0</span></div><div class="stat-l open">De mise en place</div></div>
+</div>
+
+<section class="problem" id="probleme">
+  <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:52px;">
+    <button class="psw-btn active" id="psw-livraison" onclick="switchProblem('livraison')">🛵 &nbsp;Je fais de la livraison</button>
+    <button class="psw-btn" id="psw-surplace" onclick="switchProblem('surplace')">🍽️ &nbsp;Je reçois en salle</button>
+  </div>
+  <div class="prob-grid" id="prob-livraison">
+    <div>
+      <div class="sec-badge">Le constat</div>
+      <h2 class="sec-title anton">Vous travaillez dur.<br><span class="g">Uber Eats encaisse.</span></h2>
+      <p class="sec-desc">Les plateformes prennent jusqu'à 30% sur chaque commande. Vos clients passent par elles, pas par vous. Et si demain elles changent leurs règles — vous perdez tout.</p>
+    </div>
+    <div class="prob-cards">
+      <div class="prob-card bad"><div class="pc-lbl">❌ Sans FoodUp</div><div class="pc-txt">Vos clients appartiennent à Uber Eats. Vous payez une commission à chaque commande. Zéro données. Zéro fidélisation possible.</div></div>
+      <div class="prob-card bad"><div class="pc-lbl">❌ Le calcul réel</div><div class="pc-txt">Un client commande 4×/mois à 30€ = 120€. Avec 30% de commission, vous perdez 36€/mois sur un seul client. Sur 100 clients fidèles : 3 600€ perdus chaque mois.</div></div>
+      <div class="prob-card good"><div class="pc-lbl">✓ Avec FoodUp</div><div class="pc-txt">Vos clients deviennent vos clients. Vous les fidélisez directement, réduisez vos commissions, et construisez un actif durable — indépendant des plateformes.</div></div>
+    </div>
+  </div>
+  <div class="prob-grid" id="prob-surplace" style="display:none;">
+    <div>
+      <div class="sec-badge">Le constat</div>
+      <h2 class="sec-title anton">Ils viennent.<br><span class="g">Puis disparaissent.</span></h2>
+      <p class="sec-desc">Chaque soir votre salle se remplit. Mais ces clients — combien reviennent vraiment ? Sans système de fidélisation, chaque client est comme un inconnu qui passe pour la première fois.</p>
+    </div>
+    <div class="prob-cards">
+      <div class="prob-card bad"><div class="pc-lbl">❌ Sans FoodUp</div><div class="pc-txt">Vous n'avez aucune donnée sur vos clients. Aucun moyen de les relancer. Aucune façon de les remercier ou de les faire revenir.</div></div>
+      <div class="prob-card bad"><div class="pc-lbl">❌ The Fork vous force à brader</div><div class="pc-txt">Visibilité sur The Fork = réductions de 20 à 50% + 3 € prélevés par couvert. Sur un repas à 35 €, vous encaissez entre 16 € et 25 €... 250 couverts/mois c'est 60 000€ de CA que vous ne percevez pas à la fin de l'année.</div></div>
+      <div class="prob-card good"><div class="pc-lbl">✓ Avec FoodUp</div><div class="pc-txt">Vos clients deviennent vos clients — pas ceux de The Fork. Vous les fidélisez directement et construisez un actif durable.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="comment">
+  <div class="sec-badge">Processus</div>
+  <h2 class="sec-title anton">Comment ça <span class="g">marche</span></h2>
+  <p class="sec-desc">5 étapes. Aucun effort de votre côté. On s'occupe de tout.</p>
+  <div class="how-steps">
+    <div class="step step-highlight">
+      <div class="step-n-wrap"><div class="step-n">01</div></div>
+      <span class="step-ico">🔍</span>
+      <div class="step-t anton">Audit gratuit</div>
+      <div class="step-d open">On analyse votre situation : plateformes, commissions, base clients, potentiel inexploité.</div>
+      <div class="step-tooltip"><strong>Ce qu'on fait concrètement :</strong>Appel de découverte de 20 min. On passe en revue vos plateformes actives, vos commissions actuelles, votre base clients existante.</div>
+    </div>
+    <div class="step step-highlight">
+      <div class="step-n-wrap"><div class="step-n">02</div></div>
+      <span class="step-ico">🧪</span>
+      <div class="step-t anton">1 mois d'essai</div>
+      <div class="step-d open">On teste ensemble sur 30 jours. Vous voyez les résultats avant de vous engager.</div>
+      <div class="step-badge open">Sans engagement</div>
+      <div class="step-tooltip"><strong>Pourquoi un mois d'essai ?</strong>On ne vous demande pas de nous faire confiance sur parole. Zéro risque financier, zéro engagement long terme.</div>
+    </div>
+    <div class="step step-highlight">
+      <div class="step-n-wrap"><div class="step-n">03</div></div>
+      <span class="step-ico">⚙️</span>
+      <div class="step-t anton">Mise en place</div>
+      <div class="step-d open">On installe votre stratégie de fidélisation et vos restaurants virtuels sur les plateformes.</div>
+      <div class="step-tooltip"><strong>Ce qu'on déploie :</strong>Création et configuration de vos restaurants virtuels, mise en place du programme de fidélisation, paramétrage des relances automatiques.</div>
+    </div>
+    <div class="step step-highlight">
+      <div class="step-n-wrap"><div class="step-n">04</div></div>
+      <span class="step-ico">📈</span>
+      <div class="step-t anton">Optimisation</div>
+      <div class="step-d open">Suivi continu, A/B test, marketing ciblé. On optimise chaque levier pour maximiser vos revenus.</div>
+      <div class="step-tooltip"><strong>Un suivi actif, pas passif :</strong>Chaque mois, on analyse vos données et on vous envoie un reporting clair.</div>
+    </div>
+    <div class="step step-highlight">
+      <div class="step-n-wrap"><div class="step-n">05</div></div>
+      <span class="step-ico">💰</span>
+      <div class="step-t anton">Vous encaissez</div>
+      <div class="step-d open">Vos clients reviennent plus souvent, dépensent plus, vous payez moins de commissions.</div>
+      <div class="step-tooltip"><strong>Les résultats que vous observez :</strong>+30% de CA en moyenne, ×3 de clients qui reviennent, réduction significative des commissions plateformes.</div>
+    </div>
+  </div>
+</section>
+
+<section class="offers" id="offres">
+  <div class="offers-hd">
+    <div class="sec-badge">Nos formules</div>
+    <h2 class="sec-title anton">Deux offres. <span class="g">Un objectif.</span></h2>
+    <p class="sec-desc" style="margin:0 auto">Peu importe si vous livrez ou non — on a la formule adaptée pour faire revenir vos clients et booster vos revenus.</p>
+  </div>
+  <div class="offers-grid">
+    <div class="oc gold">
+      <div class="oc-wm">1</div>
+      <div class="oc-badge gold"><span class="ob-dot"></span>Formule Livraison</div>
+      <span class="oc-ico">🛵</span>
+      <h3 class="oc-title anton">Restaurants avec<br>service de livraison</h3>
+      <p class="oc-desc">Pour les établissements qui livrent déjà ou souhaitent se lancer. On crée, gère et optimise tout pour vous.</p>
+      <div class="oc-lbl">Prestations incluses</div>
+      <ul class="oc-svcs">
+        <li><span class="sd gold">✦</span>Création de restaurants virtuels pour générer de nouveaux clients</li>
+        <li><span class="sd gold">✦</span>Gestion, optimisation et marketing du portefeuille clients & des restaurants virtuels</li>
+        <li><span class="sd gold">✦</span>Fidélisation de la clientèle</li>
+        <li><span class="sd gold">✦</span>Réduction des commissions demandées par les plateformes</li>
+      </ul>
+      <div class="oc-lbl">Tarification par commande</div>
+      <div class="tiers">
+        <div class="tier t1"><span class="t-lbl">Commande de 0 € à 15 €</span><div class="t-price"><span class="v">1 €</span><span class="u">par commande</span></div></div>
+        <div class="tier t2"><span class="t-lbl">Commande de 15 € à 50 €</span><div class="t-price"><span class="v">2 €</span><span class="u">par commande</span></div></div>
+        <div class="tier t3"><span class="t-lbl">Commande de + 50 €</span><div class="t-price"><span class="v">5 €</span><span class="u">par commande</span></div></div>
+      </div>
+    </div>
+    <div class="oc teal">
+      <div class="oc-wm">2</div>
+      <div class="oc-badge teal"><span class="ob-dot"></span>Formule Sur Place</div>
+      <span class="oc-ico">🍽️</span>
+      <h3 class="oc-title anton">Restaurants sans<br>service de livraison</h3>
+      <p class="oc-desc">Vous ne livrez pas — et c'est très bien. Vos clients sont en salle. On s'assure qu'ils reviennent, qu'ils parlent de vous, et qu'ils dépensent plus à chaque visite.</p>
+      <div class="oc-lbl" style="color:rgba(126,217,87,0.55);font-size:8px;margin-bottom:10px;">✓ Aucune plateforme de livraison requise</div>
+      <div class="oc-lbl">Prestations incluses</div>
+      <ul class="oc-svcs">
+        <li><span class="sd teal">✦</span>Fidélisation de la clientèle — programme de récompenses, offres de retour, relances post-visite</li>
+        <li><span class="sd teal">✦</span>Gestion, optimisation et marketing de votre portefeuille clients et de votre restaurant</li>
+        <li><span class="sd teal">✦</span>Animation de votre base clients pour augmenter la fréquence de visite et le panier moyen</li>
+      </ul>
+      <div class="oc-lbl">Tarification</div>
+      <div class="pbox">
+        <div class="pr"><span class="pr-lbl">Forfait unique</span><div class="pr-val"><span class="big">2 000 €</span><span class="u">one-time</span></div></div>
+        <div class="pr"><span class="pr-lbl">Par couvert</span><div class="pr-val"><span class="mid">2 €</span><span class="u">par couvert</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="fonctionnalites">
+  <div class="sec-badge">Ce qu'on fait concrètement</div>
+  <h2 class="sec-title anton">Les leviers qu'on <span class="g">actionne</span></h2>
+  <div class="feat-grid">
+    <div class="fc"><span class="fc-ico">🎯</span><div class="fc-t anton">Fidélisation clients</div><div class="fc-d">Programme de fidélité, relances automatiques, offres personnalisées. Vos clients reviennent sans que vous leviez le petit doigt.</div></div>
+    <div class="fc"><span class="fc-ico">🏪</span><div class="fc-t anton">Restaurants virtuels</div><div class="fc-d">On crée des marques virtuelles depuis votre cuisine existante pour multiplier vos sources de revenus sur les plateformes.</div></div>
+    <div class="fc"><span class="fc-ico">📊</span><div class="fc-t anton">Marketing data-driven</div><div class="fc-d">Analyse de votre portefeuille clients, segmentation, campagnes ciblées. Chaque euro marketing travaille pour vous.</div></div>
+    <div class="fc"><span class="fc-ico">💸</span><div class="fc-t anton">Réduction commissions</div><div class="fc-d">On optimise vos présences sur les plateformes pour réduire la part qu'elles prennent sur chaque commande.</div></div>
+    <div class="fc"><span class="fc-ico">🔄</span><div class="fc-t anton">Gestion portefeuille client</div><div class="fc-d">Suivi et animation continue de votre base clients pour maximiser la fréquence de commande et le panier moyen.</div></div>
+    <div class="fc"><span class="fc-ico">📱</span><div class="fc-t anton">Présence digitale</div><div class="fc-d">Optimisation de vos fiches sur toutes les plateformes. Photos, descriptifs, promotions — on soigne votre image en ligne.</div></div>
+  </div>
+</section>
+
+<section class="testi" id="temoignages">
+  <div class="sec-badge">Témoignages</div>
+  <h2 class="sec-title anton">Ils nous font <span class="g">confiance</span></h2>
+  <div class="testi-grid">
+    <div class="tc"><div class="tc-q">"</div><p class="tc-txt">En 3 mois, mes clients fidèles ont triplé leurs commandes. FoodUp a construit quelque chose que je n'aurais jamais pu faire seul. Mon CA a pris +38% sans que j'embauche.</p><div class="tc-auth"><div class="tc-av">👨‍🍳</div><div><div class="tc-name open">Marco L.</div><div class="tc-role open">Propriétaire · 2 restaurants</div></div></div></div>
+    <div class="tc"><div class="tc-q">"</div><p class="tc-txt">Je perdais 2 800€ par mois en commissions Uber Eats. FoodUp a restructuré tout ça. Aujourd'hui je paie 3× moins de commissions et j'ai mes propres clients.</p><div class="tc-auth"><div class="tc-av">👩‍🍳</div><div><div class="tc-name open">Samira B.</div><div class="tc-role open">Gérante · Restaurant + dark kitchen</div></div></div></div>
+    <div class="tc"><div class="tc-q">"</div><p class="tc-txt">J'avais 3 restaurants et aucune vision sur mes clients. FoodUp m'a donné les outils ET les résultats. Le ROI a été là dès le premier mois. Je recommande les yeux fermés.</p><div class="tc-auth"><div class="tc-av">🍕</div><div><div class="tc-name open">Karim D.</div><div class="tc-role open">Propriétaire · 3 restaurants</div></div></div></div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="sec-badge">Questions fréquentes</div>
+  <h2 class="sec-title anton">Vos <span class="g">questions.</span></h2>
+  <div class="faq-grid">
+    <div class="faq-col">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Est-ce que je dois changer mon organisation ? <span class="faq-arr">▼</span></div><div class="faq-a">Non. FoodUp travaille avec ce que vous avez déjà. On optimise l'existant, sans aucune contrainte dans votre cuisine ou votre équipe.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Combien de temps avant les premiers résultats ? <span class="faq-arr">▼</span></div><div class="faq-a">La plupart de nos clients voient des premiers résultats en 14 à 30 jours. La fidélisation monte en puissance sur 2 à 3 mois avec un reporting mensuel complet.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Dois-je être sur Uber Eats ou Deliveroo ? <span class="faq-arr">▼</span></div><div class="faq-a">Pour la formule Livraison, oui — ou on peut vous y accompagner. Pour la formule Sur Place, aucune plateforme n'est nécessaire.</div></div>
+    </div>
+    <div class="faq-col">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Comment fonctionne la facturation ? <span class="faq-arr">▼</span></div><div class="faq-a">Formule Livraison : uniquement à la commande générée — 1€, 2€ ou 5€. Zéro abonnement fixe. Formule Sur Place : forfait unique de 2 000€ + 2€ par couvert.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Je n'ai qu'un seul restaurant — est-ce fait pour moi ? <span class="faq-arr">▼</span></div><div class="faq-a">Absolument. FoodUp est conçu pour les restaurateurs indépendants — qu'ils aient 1, 2 ou 5 établissements. Les solutions s'adaptent à votre taille.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Y a-t-il un engagement long terme ? <span class="faq-arr">▼</span></div><div class="faq-a">Non. Aucun engagement. On préfère que vous restiez parce que ça marche — pas parce que vous êtes bloqué. Résiliable à tout moment.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="sec-badge">Contact</div>
+      <h2 class="sec-title anton">Parlons de<br>votre <span class="g">restaurant.</span></h2>
+      <p class="sec-desc">Un échange de 20 minutes suffit pour voir si FoodUp peut faire une vraie différence pour vous. Aucun engagement.</p>
+      <div class="c-promise">
+        <div class="cp-item"><div class="cp-check">✓</div>Diagnostic gratuit de votre situation actuelle</div>
+        <div class="cp-item"><div class="cp-check">✓</div>Estimation du potentiel de gains avec FoodUp</div>
+        <div class="cp-item"><div class="cp-check">✓</div>Réponse sous 24h ouvrées garantie</div>
+        <div class="cp-item"><div class="cp-check">✓</div>Aucun commercial agressif — juste une vraie conversation</div>
+      </div>
+    </div>
+    <div class="c-form">
+      <div class="cf-title anton">Être contacté</div>
+      <div class="cf-sub open">Remplissez ce formulaire — on revient vers vous rapidement</div>
+      <div class="form-row">
+        <div class="fg"><label class="fl open">Prénom</label><input type="text" class="fi" placeholder="Jean"></div>
+        <div class="fg"><label class="fl open">Nom</label><input type="text" class="fi" placeholder="Dupont"></div>
+      </div>
+      <div class="fg"><label class="fl open">Nom du restaurant</label><input type="text" class="fi" placeholder="Le Bistrot de Jean"></div>
+      <div class="form-row">
+        <div class="fg"><label class="fl open">Téléphone</label><input type="tel" class="fi" placeholder="06 00 00 00 00"></div>
+        <div class="fg"><label class="fl open">Nb d'établissements</label>
+          <select class="fs"><option value="" disabled selected>Choisir</option><option>1 restaurant</option><option>2 restaurants</option><option>3 à 5 restaurants</option><option>Plus de 5</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="fl open">Formule qui vous intéresse</label>
+        <select class="fs"><option value="" disabled selected>Choisir</option><option>Formule Livraison</option><option>Formule Sur Place</option><option>Les deux</option><option>Je ne sais pas encore</option></select>
+      </div>
+      <div class="fg"><label class="fl open">Votre situation (optionnel)</label><textarea class="fta" placeholder="Décrivez votre situation actuelle, vos défis, vos objectifs..."></textarea></div>
+      <button class="fsub">Envoyer ma demande →</button>
+    </div>
+  </div>
+</section>
+
+<div style="background:var(--d1);border-top:1px solid rgba(255,255,255,0.06);">
+<footer>
+  <div class="f-logo">Food<span>Up</span></div>
+  <ul class="f-links">
+    <li><a href="#offres">Offres</a></li>
+    <li><a href="#comment">Comment ça marche</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="f-copy open">© 2025 FoodUp — Tous droits réservés</div>
+</footer>
+</div>
+
+<script>
+function switchProblem(type) {
+  document.getElementById('prob-livraison').style.display = type === 'livraison' ? 'grid' : 'none';
+  document.getElementById('prob-surplace').style.display  = type === 'surplace'  ? 'grid' : 'none';
+  document.getElementById('psw-livraison').classList.toggle('active', type === 'livraison');
+  document.getElementById('psw-surplace').classList.toggle('active', type === 'surplace');
+}
+
+function toggleFaq(el){
+  const item=el.parentElement;
+  const open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!open) item.classList.add('open');
+}
+
+function animateCount(el) {
+  const target  = parseInt(el.dataset.target);
+  const prefix  = el.dataset.prefix  || '';
+  const suffix  = el.dataset.suffix  || '';
+  const duration = 1800;
+  const steps    = 60;
+  const interval = duration / steps;
+  let current = 0;
+  el.textContent = prefix + '0' + suffix;
+  const timer = setInterval(() => {
+    current += target / steps;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    el.textContent = prefix + Math.round(current) + suffix;
+  }, interval);
+}
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.count-anim').forEach(el => {
+        if (!el.dataset.animated) {
+          el.dataset.animated = '1';
+          animateCount(el);
+        }
+      });
+    }
+  });
+}, { threshold: 0.4 });
+
+const statsBar = document.getElementById('stats-bar');
+if (statsBar) statsObserver.observe(statsBar);
+</script>
+
+</body>
+</html>
