@@ -821,11 +821,40 @@ footer{background:var(--s1);padding:44px 0 24px;border-top:1px solid var(--bd)}
 @media(max-width:580px){
   #hero{padding:100px 0 56px}
   .htit{font-size:clamp(40px,12vw,64px)}
-  .hstats{grid-template-columns:1fr}
-  .hstat{border-left:none!important;padding-left:0!important;border-bottom:1px solid var(--bd)}
-  .hstat:last-child{border-bottom:none}
+  /* ── hstats : 2×2 grid on mobile ── */
+  .hstats{grid-template-columns:1fr 1fr!important}
+  .hstat{border-left:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:14px 16px}
+  .hstat:nth-child(odd){border-left:none;padding-left:0}
+  .hstat:nth-child(3),.hstat:nth-child(4){border-bottom:none}
   .tick-wrap{padding:14px 16px;gap:12px}
   .tick-val{font-size:26px}
+}
+
+/* ── Livraison mobile : offer card after lnums ── */
+@media(max-width:860px){
+  .lg{display:flex;flex-direction:column}
+  #liv-left{display:contents}
+  .lhook{order:1}
+  #liv-left > p.lstory:first-of-type{order:2}
+  #liv-left > p.lstory:last-of-type{order:3}
+  .lnums{order:4}
+  #liv-right{order:5}
+  #tick-block{order:6}
+  #liv-left > .sim-wrap{order:7}
+  #liv-left > .btn-g{order:8}
+}
+
+/* ── Sur Place mobile : offer card after snums ── */
+@media(max-width:860px){
+  .sg{display:flex;flex-direction:column}
+  #sp-right{display:contents}
+  .shook{order:1}
+  #sp-right > p.sstory:first-of-type{order:2}
+  #sp-right > p.sstory:last-of-type{order:3}
+  .snums{order:4}
+  #sp-left{order:5}
+  #sp-right > .sim-wrap{order:6}
+  #sp-right > .btn-or{order:7}
 }
 
 /* ── Pain ── */
@@ -1128,7 +1157,7 @@ footer{background:var(--s1);padding:44px 0 24px;border-top:1px solid var(--bd)}
     <div class="lg">
 
       <!-- Gauche : texte + stats + simulateur -->
-      <div>
+      <div id="liv-left">
         <h2 class="lhook rv">
           <span class="ac">Vous avez les fourneaux.</span><br>
           On vous rend les clients.
@@ -1225,7 +1254,7 @@ footer{background:var(--s1);padding:44px 0 24px;border-top:1px solid var(--bd)}
       </div>
 
       <!-- Droite : offer card -->
-      <div class="rv d2">
+      <div id="liv-right" class="rv d2">
         <div class="offer-card">
           <div class="oc-header">
             <div class="oc-ico">🛵</div>
@@ -1307,7 +1336,7 @@ footer{background:var(--s1);padding:44px 0 24px;border-top:1px solid var(--bd)}
     <div class="sg">
 
       <!-- Gauche : offer card -->
-      <div class="rv">
+      <div id="sp-left" class="rv">
         <div class="sp-card">
           <div class="sp-header">
             <div class="sp-ico">🍽️</div>
@@ -1381,7 +1410,7 @@ footer{background:var(--s1);padding:44px 0 24px;border-top:1px solid var(--bd)}
       </div>
 
       <!-- Droite : texte + stats + simulateur fidélisation -->
-      <div>
+      <div id="sp-right">
         <h2 class="shook rv d1">
           <span class="ac">Votre salle se remplit.</span><br>
           Votre base clients, elle, reste vide.
@@ -1649,7 +1678,7 @@ footer{background:var(--s1);padding:44px 0 24px;border-top:1px solid var(--bd)}
             <div class="cpt-ico">✉️</div>
             <div class="cpt-txt">
               <strong>Email direct</strong>
-              <a href="mailto:contact@foodup-pro.fr" style="color:var(--g);font-size:13px;font-weight:600;text-decoration:none;transition:opacity .2s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">contact@foodup-pro.fr</a>
+              <a href="/cdn-cgi/l/email-protection#a5c6cacbd1c4c6d1e5c3cacac1d0d588d5d7ca8bc3d7" style="color:var(--g);font-size:13px;font-weight:600;text-decoration:none;transition:opacity .2s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'"><span class="__cf_email__" data-cfemail="f3909c9d87929087b3959c9c978683de83819cdd9581">[email&#160;protected]</span></a>
             </div>
           </div>
         </div>
@@ -1694,12 +1723,12 @@ footer{background:var(--s1);padding:44px 0 24px;border-top:1px solid var(--bd)}
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <p class="fc">© 2026 FoodUp — Tous droits réservés &nbsp;·&nbsp; <a href="mailto:contact@foodup-pro.fr" style="color:var(--g);text-decoration:none;font-size:12px">contact@foodup-pro.fr</a></p>
+    <p class="fc">© 2026 FoodUp — Tous droits réservés &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection#64070b0a1005071024020b0b0011144914160b4a0216" style="color:var(--g);text-decoration:none;font-size:12px"><span class="__cf_email__" data-cfemail="ed8e8283998c8e99ad8b828289989dc09d9f82c38b9f">[email&#160;protected]</span></a></p>
   </div>
 </footer>
 
 <!-- ════════════════ JS ════════════════ -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ── Cursor ── */
 const cur=document.getElementById('cur'),curR=document.getElementById('curR');
 let mx=0,my=0,rx=0,ry=0;
@@ -1853,20 +1882,4 @@ function envoyerFormulaire(){
   emailjs.send('service_te9kt2c','template_sj7iw58',params)
     .then(()=>{
       btn.innerHTML='✓ Demande envoyée !';
-      btn.style.background='#4db32a';
-    })
-    .catch(()=>{
-      btn.innerHTML='Erreur — réessayez';
-      btn.style.background='#dc3232';
-      btn.disabled=false;
-    });
-}
-document.querySelectorAll('.prs').forEach(step=>{
-  step.addEventListener('click',()=>{
-    document.querySelectorAll('.prs.open').forEach(s=>s.classList.remove('open'));
-    step.classList.add('open');
-  });
-});
-</script>
-</body>
-</html>
+      btn.style.background='#4db32
